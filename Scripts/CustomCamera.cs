@@ -14,7 +14,7 @@ public class CustomCamera : MonoBehaviour
         // Waiting for Resource
         if (playerTransform == null)
         {
-            Debug.Log("[Custom Camera] Waiting for Resource Manager..");
+            Debug.Log("[Custom Camera] Waiting for Resource Manager.. (" + Time.time + ")");
         }
 
         // Get transform from Resource Manager
@@ -32,6 +32,6 @@ public class CustomCamera : MonoBehaviour
     {
         playerTransform = resourceManager.player.transform;
         offset = transform.position - playerTransform.position;
-        Debug.Log("[Custom Camera] Player attached.");
+        Debug.Log("[Custom Camera] Player attached. (" + Time.time + ")");
     }
 }
