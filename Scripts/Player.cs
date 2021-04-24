@@ -12,8 +12,10 @@ public class Player : MonoBehaviour
     public int itemCount;
     public int score;
 
+    public bool isFreeze;
+
     bool isJump;
-    private float jumpPower;
+    float jumpPower;
 
     private void Awake()
     {
@@ -23,6 +25,9 @@ public class Player : MonoBehaviour
 
         if (scoreAudio == null)
             Debug.Log("You need to attach the audio component.");
+
+        // Freeze Flag
+        isFreeze = true;
 
         // Jump
         jumpPower = 25f;
@@ -42,18 +47,18 @@ public class Player : MonoBehaviour
         {
             rigid.AddForce(new Vector3(0, jumpPower, 0), ForceMode.Impulse);
             isJump = true;
-        }
-
+        }  
     }
 
     private void FixedUpdate()
     {
-        float h = Input.GetAxisRaw("Horizontal");
-        float v = Input.GetAxisRaw("Vertical");
+        if (!isFreeze)
+        {
+            float h = Input.GetAxisRaw("Horizontal");
+            float v = Input.GetAxisRaw("Vertical");
 
-        // Move
-        rigid.AddForce(new Vector3(h, 0, v), ForceMode.Impulse);
-
+            rigid.AddForce(new Vector3(h, 0, v), ForceMode.Impulse);
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -75,7 +80,7 @@ public class Player : MonoBehaviour
             manager.GetScore(score);
 
             // Sound Play
-            GetComponent<AudioSource>().Play();
+            scoreAudio.Play();
 
             // DeActive
             other.gameObject.SetActive(false);
@@ -89,13 +94,17 @@ public class Player : MonoBehaviour
             manager.GetScore(score);
 
             // Sound Play
-            GetComponent<AudioSource>().Play();
+            scoreAudio.Play();
 
             // DeActive
             other.gameObject.SetActive(false);
         }
 
         if (other.name == "Finish" && itemCount == manager.stageItemCount)
+        {
+            // Next Stage
             SceneManager.LoadScene(++manager.stage);
+        }
+            
     }
 }
