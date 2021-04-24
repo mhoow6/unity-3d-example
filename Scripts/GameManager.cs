@@ -12,36 +12,42 @@ public class GameManager : MonoBehaviour
     public int stageItemCount; // Scene 별로 직접 설정
     public Text stageItemText;
 
-    private int playerItemCount; // private
+    private int playerItemCount;
     public Text playerItemText;
 
-    private int playerScore; // private, 누적되게할려면 특별한 방법이 필요하다..
+    private int playerScore;
     public Text playerScoreText;
 
     public GameObject menuSet;
     public ResourceManager resourceManager;
     private Player player;
 
+    private float freezeTimer;
+
     private void Awake()
     {
-        stageText.text = "STAGE " + stage.ToString();
+        // freeze Timer init
+        freezeTimer = 0;
 
-        // Stage Item, Scene 별로 다름
-        stageItemText.text = "/ " + stageItemCount.ToString();
+        // Component Check
+        if (menuSet == null)
+            Debug.Log("[Game Manager] You need to attach the UI");
 
-        // Player Item Count
-        playerItemText.text = playerItemCount.ToString();
-
-        // Player Score
-        playerScoreText.text = playerScore.ToString();
+        if (resourceManager == null)
+            Debug.Log("[Game Manager] You need to attach the Resource Manager");
 
         // Waiting for Resource
         if (player == null)
-            Debug.Log("[GameManager] Waiting for Resource Manager..");
+            Debug.Log("[Game Manager] Waiting for Resource Manager.. (" + Time.time + ")");
 
-        // Get Player with Loading
-        Invoke("GetPlayer", 1);
+        // UI Init
+        stageText.text = "STAGE " + stage.ToString();
+        stageItemText.text = "/ " + stageItemCount.ToString(); // Stage Item, Scene 별로 다름
+        playerItemText.text = playerItemCount.ToString();
+        playerScoreText.text = playerScore.ToString();
 
+        // Get Player
+        Invoke("GetPlayerFromResource", 1);
     }
 
     private void Update()
@@ -49,6 +55,14 @@ public class GameManager : MonoBehaviour
         // Sub Menu
         if (Input.GetButtonDown("Cancel"))
             SubMenuActive();
+
+        // Freeze Timer On
+        if (freezeTimer <= 2.0f)
+            freezeTimer += Time.deltaTime;
+
+        // Freeze Off
+        if (player != null && freezeTimer > 2.0f)
+            player.isFreeze = false;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -84,53 +98,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void GameSave()
+    void GetPlayerFromResource()
     {
-        // Set Player Position
-        PlayerPrefs.SetFloat("playerX", player.gameObject.transform.position.x);
-        PlayerPrefs.SetFloat("playerY", player.gameObject.transform.position.y);
-        PlayerPrefs.SetFloat("playerZ", player.gameObject.transform.position.z);
-
-        // Set Player Item Count & Score
-        PlayerPrefs.SetInt("playerItemCount", player.itemCount);
-        PlayerPrefs.SetInt("playerScore", player.score);
-
-        // menuSet deactive
-        menuSet.SetActive(false);
-    }
-
-    public void GameLoad()
-    {
-        // Save Fail
-        if (!PlayerPrefs.HasKey("playerX"))
-        {
-            Debug.Log("[GameManager] Save Failed.");
-            return;
-        }
-            
-
-        // Player Pos
-        float x = PlayerPrefs.GetFloat("playerX");
-        float y = PlayerPrefs.GetFloat("playerY");
-        float z = PlayerPrefs.GetFloat("playerZ");
-        player.transform.position = new Vector3(x, y, z);
-
-        // Get Player Item Count & Score
-        playerItemCount = PlayerPrefs.GetInt("playerItemCount");
-        playerScore = PlayerPrefs.GetInt("playerScore");
+        player = resourceManager.player;
+        Debug.Log("[GameManager] Player attached. (" + Time.time + ")");
     }
 
     public void GameExit()
     {
         Application.Quit();
-    }
-
-    void GetPlayer()
-    {
-        player = resourceManager.player;
-        Debug.Log("[GameManager] Player attached.");
-
-        // Load Game
-        GameLoad();
     }
 }
