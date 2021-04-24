@@ -17,6 +17,13 @@ public class ResourceManager : MonoBehaviour
         get => _player;
     }
 
+    private void Awake()
+    {
+        // Component Check
+        if (manager == null)
+            Debug.Log("[Resource Manager] You need to attach the Game Manager");
+    }
+
 
     private void Start()
     {
@@ -37,6 +44,13 @@ public class ResourceManager : MonoBehaviour
     public void CreateTerrain()
     {
         if (manager.stage == 0)
+        {
+            terrain = Instantiate(Resources.Load<GameObject>("Terrain"));
+            terrain.name = "Terrain";
+            terrain.transform.localScale = new Vector3(11.381f, 1f, 13.994f);
+        }
+
+        if (manager.stage == 1)
         {
             terrain = Instantiate(Resources.Load<GameObject>("Terrain"));
             terrain.name = "Terrain";
