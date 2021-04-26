@@ -15,11 +15,10 @@ public class CustomCamera : MonoBehaviour
         if (playerTransform == null)
         {
             Debug.Log("[Custom Camera] Waiting for Resource Manager.. (" + Time.time + ")");
+
+            // Get transform from Resource Manager
+            Invoke("CatchPlayer", 1);
         }
-
-        // Get transform from Resource Manager
-        Invoke("CatchPlayer", 1);
-
     }
 
     private void LateUpdate()
