@@ -22,13 +22,8 @@ public class GameManager : MonoBehaviour
     public ResourceManager resourceManager;
     private Player player;
 
-    private float freezeTimer;
-
     private void Awake()
     {
-        // freeze Timer init
-        freezeTimer = 0;
-
         // Component Check
         if (menuSet == null)
             Debug.Log("[Game Manager] You need to attach the UI");
@@ -55,14 +50,6 @@ public class GameManager : MonoBehaviour
         // Sub Menu
         if (Input.GetButtonDown("Cancel"))
             SubMenuActive();
-
-        // Freeze Timer On
-        if (freezeTimer <= 2.0f)
-            freezeTimer += Time.deltaTime;
-
-        // Freeze Off
-        if (player != null && freezeTimer > 2.0f)
-            player.isFreeze = false;
     }
 
     private void OnTriggerEnter(Collider other)
