@@ -50,12 +50,12 @@ public class ResourceManager : MonoBehaviour
             terrain.transform.localScale = new Vector3(11.381f, 1f, 13.994f);
         }
 
-        if (manager.stage == 1)
+        /*if (manager.stage == 1)
         {
             terrain = Instantiate(Resources.Load<GameObject>("Terrain"));
             terrain.name = "Terrain";
             terrain.transform.localScale = new Vector3(11.381f, 1f, 13.994f);
-        }
+        }*/
     }
 
     public void CreateItem()
