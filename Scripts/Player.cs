@@ -12,10 +12,8 @@ public class Player : MonoBehaviour
     public int itemCount;
     public int score;
 
-    public bool isFreeze;
-
-    bool isJump;
-    float jumpPower;
+    public bool isJump;
+    public float jumpPower;
 
     private void Awake()
     {
@@ -25,9 +23,6 @@ public class Player : MonoBehaviour
 
         if (scoreAudio == null)
             Debug.Log("You need to attach the audio component.");
-
-        // Freeze Flag
-        isFreeze = true;
 
         // Jump
         jumpPower = 25f;
@@ -40,26 +35,23 @@ public class Player : MonoBehaviour
         score = 0;
     }
 
-    void Update()
+    /*private void Update()
     {
         // Jump
         if (Input.GetButtonDown("Jump") && !isJump)
         {
             rigid.AddForce(new Vector3(0, jumpPower, 0), ForceMode.Impulse);
             isJump = true;
-        }  
+        }
     }
 
     private void FixedUpdate()
     {
-        if (!isFreeze)
-        {
-            float h = Input.GetAxisRaw("Horizontal");
-            float v = Input.GetAxisRaw("Vertical");
+        float h = Input.GetAxisRaw("Horizontal");
+        float v = Input.GetAxisRaw("Vertical");
 
-            rigid.AddForce(new Vector3(h, 0, v), ForceMode.Impulse);
-        }
-    }
+        rigid.AddForce(new Vector3(h, 0, v), ForceMode.Impulse);
+    }*/
 
     private void OnCollisionEnter(Collision collision)
     {
