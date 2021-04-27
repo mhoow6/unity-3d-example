@@ -8,12 +8,15 @@ public class Player : MonoBehaviour
     public Rigidbody rigid;
     public AudioSource scoreAudio;
     public GameManager manager;
+    public Transform cameraArm;
 
     public int itemCount;
     public int score;
 
     public bool isJump;
     public float jumpPower;
+
+    public bool isFreeze;
 
     private void Awake()
     {
@@ -24,6 +27,12 @@ public class Player : MonoBehaviour
         if (scoreAudio == null)
             Debug.Log("You need to attach the audio component.");
 
+        if (manager == null)
+            Debug.Log("You need to attach the Game Manager.");
+
+        if (cameraArm == null)
+            Debug.Log("You need to attach the Camera Arm.");
+
         // Jump
         jumpPower = 25f;
         isJump = false;
@@ -33,9 +42,12 @@ public class Player : MonoBehaviour
 
         // Score
         score = 0;
+
+        // Freeze
+        isFreeze = true;
     }
 
-    /*private void Update()
+    private void Update()
     {
         // Jump
         if (Input.GetButtonDown("Jump") && !isJump)
@@ -47,11 +59,17 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        float h = Input.GetAxisRaw("Horizontal");
-        float v = Input.GetAxisRaw("Vertical");
+        if (!isFreeze)
+        {
+            Vector2 moveInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+            Vector3 lookForawrd = new Vector3(cameraArm.forward.x, 0f, cameraArm.forward.z).normalized;
+            Vector3 lookRight = new Vector3(cameraArm.right.x, 0f, cameraArm.right.z).normalized;
+            Vector3 moveDir = lookForawrd * moveInput.y + lookRight * moveInput.x;
 
-        rigid.AddForce(new Vector3(h, 0, v), ForceMode.Impulse);
-    }*/
+            // 바라보는 방향으로 이동
+            rigid.AddForce(moveDir, ForceMode.Impulse);
+        }  
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -99,4 +117,5 @@ public class Player : MonoBehaviour
         }
             
     }
+
 }
