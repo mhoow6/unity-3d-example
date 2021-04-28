@@ -7,7 +7,12 @@ public class CameraArm : MonoBehaviour
     public Player player;
     public ResourceManager resourceManager;
 
-    // Start is called before the first frame update
+    float zoom;
+    float zoomMin;
+    float zoomMax;
+    public float zoomSensitivity;
+    public float zoomSpeed;
+
     private void Awake()
     {
         // Waiting for Resource
@@ -18,13 +23,20 @@ public class CameraArm : MonoBehaviour
             // Get transform from Resource Manager
             Invoke("CatchPlayer", 1);
         }
+
+        // Zoom
+        zoom = transform.position.z;
+        zoomMin = -1f;
+        zoomMax = 1f;
+        zoomSensitivity = 0.5f;
+        zoomSpeed = 5.0f;
     }
 
-    // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
-        LookAround();
         FollowPlayer();
+        LookAround();
+        ZoomOut();
     }
 
     void LookAround()
@@ -47,7 +59,7 @@ public class CameraArm : MonoBehaviour
     void FollowPlayer()
     {
         if (player != null)
-            transform.position = player.gameObject.transform.position + new Vector3(0, 0.232f, 0);
+            transform.position = player.gameObject.transform.position + new Vector3(0, 0.232f, 0) + ZoomOut();
     }
 
     void CatchPlayer()
@@ -55,5 +67,18 @@ public class CameraArm : MonoBehaviour
         player = resourceManager.player;
         player.isFreeze = false;
         Debug.Log("[Camera Arm] Player attached. (" + Time.time + ")");
+    }
+
+    Vector3 ZoomOut()
+    {
+        // 스크롤 시 얻는 값
+        zoom -= Input.GetAxis("Mouse ScrollWheel") * zoomSensitivity;
+        zoom = Mathf.Clamp(zoom, zoomMin, zoomMax);
+
+        // 전방벡터을 기준으로 확대/축소
+        Vector3 result = transform.forward * zoom;
+
+        // Vector3 반환
+        return result;
     }
 }
