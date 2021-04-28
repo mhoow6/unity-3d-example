@@ -7,6 +7,7 @@ public class ResourceManager : MonoBehaviour
     // Prefabs
     Player _player;
     Item coin;
+    Item coin2;
     Item cube;
     Item finish;
     GameObject terrain;
@@ -63,12 +64,20 @@ public class ResourceManager : MonoBehaviour
         if (manager.stage == 0)
         {
             coin = pool.CreateItem("Coin");
+            coin2 = pool.CreateItem("Coin");
+
             cube = pool.CreateItem("Cube");
             finish = pool.CreateItem("Finish");
-            finish.isItem = false;
 
             coin.transform.position = new Vector3(-3.1f, 1.58f, 2.55f);
             coin.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+
+            coin2.transform.position = new Vector3(-3.1f, 1.58f, -2.55f);
+            coin2.GetComponent<Coin>().patrolPoints.Add(new Vector3(-3.1f, 1.58f, -2.55f));
+            coin2.GetComponent<Coin>().patrolPoints.Add(new Vector3(3.1f, 1.58f, -2.55f));
+            coin2.GetComponent<Coin>().isPatrol = true;
+            coin2.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+
 
             cube.transform.position = new Vector3(3.83f, 1.64f, 3.48f);
 
