@@ -30,7 +30,14 @@ public class PoolManager : MonoBehaviour
 
             GameObject item = Instantiate(Resources.Load<GameObject>(_name));
 
-            Item itemScript = item.AddComponent<Item>();
+            Item itemScript = null;
+            
+            if (_name == "Coin")
+                itemScript = item.AddComponent<Coin>();
+            else if (_name == "Cube")
+                itemScript = item.AddComponent<Cube>();
+            else if (_name == "Finish")
+                itemScript = item.AddComponent<Finish>();
 
             itemScript.gameObject.name = _name;
 
