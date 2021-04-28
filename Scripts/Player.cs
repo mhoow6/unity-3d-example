@@ -80,28 +80,23 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        // Get Coin
-        if (other.name == "Coin")
+        // Get Score Item
+        if (other.CompareTag("Score"))
         {
+            RotateItem item = other.GetComponent<RotateItem>();
+            
             // Player gets score and itemCount
-            itemCount++;
-            score += 100;
-            manager.GetItemCount(itemCount);
+            score += item.GetItemScore();
             manager.GetScore(score);
 
-            // Sound Play
-            scoreAudio.Play();
-
-            // DeActive
-            other.gameObject.SetActive(false);
-        }
-        
-        // Get Cube
-        if (other.name == "Cube")
-        {
-            // Player gets score
-            score += 500;
-            manager.GetScore(score);
+            // Cube is not countable
+            if (item.gameObject.name != "Cube")
+            {
+                itemCount++;
+                manager.GetItemCount(itemCount);
+            }
+                
+            
 
             // Sound Play
             scoreAudio.Play();
@@ -110,11 +105,9 @@ public class Player : MonoBehaviour
             other.gameObject.SetActive(false);
         }
 
+        // Stage
         if (other.name == "Finish" && itemCount == manager.stageItemCount)
-        {
-            // Next Stage
             SceneManager.LoadScene(++manager.stage);
-        }
             
     }
 
